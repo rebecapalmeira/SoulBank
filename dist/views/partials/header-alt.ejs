@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="pt-br">
+
+<head>
+  <title>Login</title>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css"
+  integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
+<link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"
+  integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
+<link rel="stylesheet" href="/css/style.css">
+<script src="js/jquery-3.6.0.min.js"></script>
+<link rel="stylesheet" href="https://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;800&family=Mulish:wght@500;600;700;800;900&display=swap"
+    rel="stylesheet">
+
+
+  <script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
+  <script>
+    $(document).ready(function () {
+        // configuração botão de seta para cima no scroll
+        var janela = $(window);
+
+        janela.on('scroll', function () {
+        if (janela.scrollTop() < "400") {
+            $("#setaParaCima").css({ visibility: 'hidden' });
+        } else {
+            $("#setaParaCima").css({ visibility: 'visible', scrollTop: 'smooth' });
+        }
+        })
+
+        $("#setaParaCima").click(function (){
+        $('html').animate({scrollTop: '0px'}, 600);
+        });
+
+    });
+
+    // botão de libras
+    new window.VLibras.Widget('https://vlibras.gov.br/app');
+      
+  </script>
+
+</head>
+
+<body id="body-transfer">
+    <!-- botão LIBRAS -->
+    <div vw class="enabled">
+      <!-- div com botão para habilitar Libras -->
+      <div vw-access-button class="active"></div>
+      <div vw-plugin-wrapper>
+          <div class="vw-plugin-top-wrapper"></div>
+      </div>
+    </div>
+    <header>
+      <nav class="navbar navbar-expand-lg navbar-light navbar-custom bg-dark">
+        <a class="navbar-brand font-weight-bold" href="/" id="branch" style="color: white;">
+          <img src="image/bank (1).png" id="logo" alt="" width="42px" class="d-inline-block align-text-middle mr-1 ml-3">
+          Bankode
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown"
+          aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Alterna navegação">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavDropdown">
+          <ul class="navbar-nav ml-auto mr-5" style="margin-right: 4.5vw !important;">
+            <li>
+              <a class="nav-link nave" href="#" style="color: #ffffff">Sobre</a>
+            </li>
+            <li>
+              <a class="nav-link nave" href="#" style="color: #ffffff;">Contato</a>
+            </li>
+            <li>
+              <a class="nav-link nave" href="/login" style="color: #ffffff">Login</a>
+            </li>
+            <li>
+              <a class="nav-link nave" href="/cadastrarUsuario" style="color: #ffffff">Cadastre-se</a>
+            </li>
+          </ul>
+  
+        </div>
+      </nav>   
+    </header>
+

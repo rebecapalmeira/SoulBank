@@ -1,0 +1,97 @@
+<%- include("../partials/header-alt") %>
+    <main class="containermt-5">
+      <h1 class="text-center text-uppercase h1-transfer my-5">Cadastro</h1>
+      <div class="container">
+          <div class="row d-flex justify-content-center align-items-center mb-5">
+              <div class="col col-lg-11 mx-2">
+                  <div class="row">
+                      <div class="col-lg-5 d-none d-md-block imglateral-transfer1"
+                          style="background-color: #e3e4df; border-radius: 35px 0 0 0;" title="Photo by Josh Hild on Unsplash
+                          ">
+  
+                      </div>
+                      <div class="col-md-7 d-flex align-items-center"
+                          style="background-color: #6dbddf; border-radius: 0 0 35px 0;">
+                          <div class="card-body p-lg-4 text-black">
+                            <form class="form-card" method="POST" action="/cadastrarUsuario">
+                              <div class="row justify-content-between text-left">
+                                <div class="form-group col-sm-12 flex-column d-flex">
+                                  <label for="nome">Nome<span class="text-danger"> *</span></label>
+                                  <input class="form-control" type="text" id="nome" name="nome" placeholder="Ex: Ana" onblur="validaNome()">
+                                </div>
+                              
+                  
+                              </div>
+                    
+                              <div class=" row justify-content-between text-left">
+                                <div class="form-group col-sm-6 flex-column d-flex">
+                                  <label  for="cpf">CPF<span class="text-danger"> *</span></label>
+                                  <input class="form-control" type="text" id="cpf" name="cpf" placeholder="000.000.000-15" onblur="validaCpf()">
+                                </div>
+                    
+                                <div class="form-group col-sm-6 flex-column d-flex">
+                                  <label  for="contato">Contato<span class="text-danger"> *</span></label>
+                                  <input class="form-control" type="tel" id="contato" name="contato" placeholder="Ex: (15) 99999-9999" onblur="validaNumero()">
+                                </div>
+                    
+                              </div>
+                    
+                              <div class="row justify-content-between text-left">
+
+                                <div class="col-sm-7 flex-column d-flex">
+                                  <label  for="email">E-mail<span class="text-danger"> *</span></label>
+                                  <div class="input-group">
+                                      <div class="input-group-prepend">
+                                          <span class="input-group-text" id="saldo">@</span>
+                                      </div>
+                                      <input class="form-control" type="email" id="email" name="email" placeholder="usuario@email.com" onblur="validaEmail()">
+                                  </div>
+                                </div>
+                  
+                                <div class="form-group col-sm-5 flex-column d-flex">
+                                  <label  for="senha">Senha<span class="text-danger"> *</span></label>
+                                  <input  class="form-control"type="password" id="senha" name="senha" placeholder="123456" onblur="validaSenha()">
+                                </div>
+                  
+                              </div>
+                    
+                    
+                              <div class="row justify-content-between text-left">
+                                <div class="form-group col-sm-4 flex-column d-flex">
+                                  <label  for="agencia">Agência<span class="text-danger"> *</span></label>
+                                  <input class="form-control" type="text" id="agencia" name="agencia" placeholder="0000-0" onblur="validaAgencia()">
+                                </div>
+                  
+                                <div class="form-group col-sm-4 flex-column d-flex">
+                                  <label  for="conta">Conta<span class="text-danger"> *</span></label>
+                                  <input class="form-control" type="text" id="conta" name="conta" placeholder="Digite sua conta" onblur="validaConta()">
+                                </div>
+
+                                <div class="col-sm-4 flex-column d-flex">
+                                  <label for="saldo">Saldo em conta</label>
+                                  <div class="input-group">
+                                      <div class="input-group-prepend">
+                                          <span class="input-group-text" id="saldo">R$</span>
+                                      </div>
+                                      <input type="text" class="form-control" name="saldo" id="saldo" placeholder="Ex: 415.00" onblur="validaSaldo()">
+                                  </div>
+                                </div>
+                    
+                              <div class="rowr">
+                                <div class="form-group col-sm-12">
+                                  <button class="btn btn-block btn-dark" id="botaoEnviar" type="submit"
+                                    onfocus="validarcampos()" style=" font-weight: 600;">Cadastrar</button>
+                                </div>
+                              </div>
+                            </form>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>      
+    </main> 
+         
+                
+    <!-- <script src="indice.js"></script> -->
+    <%- include("../partials/footer") %>
