@@ -76,7 +76,7 @@ export = (app: Router) =>{
     )
 
     app.get<reqRes>('/transferencia/:id', function (request, response) {
-        let id = request.params;
+        let id = request.params.id;
         UserModel.findById(({ _id: id }), (err:any, usuarioLogado:any) =>{
             console.log(usuarioLogado)
             if (err)
@@ -101,9 +101,9 @@ export = (app: Router) =>{
             if(err) 
                 return response.status(500).send("Erro ao buscar remetente");
 
-            const idOrigem = usuarioLogado[0]._id;
+            const idOrigem = usuarioLogado._id;
             // console.log(idOrigem);
-            let saldoOrigem = usuarioLogado[0].saldo;
+            let saldoOrigem = usuarioLogado.saldo;
             // console.log(saldoOrigem);
 
             if (saldoOrigem < valor) {

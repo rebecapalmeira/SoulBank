@@ -57,7 +57,7 @@ module.exports = function (app) {
         });
     });
     app.get('/transferencia/:id', function (request, response) {
-        var id = request.params;
+        var id = request.params.id;
         cliente_model_1.UserModel.findById(({ _id: id }), function (err, usuarioLogado) {
             console.log(usuarioLogado);
             if (err)
@@ -75,9 +75,9 @@ module.exports = function (app) {
         cliente_model_1.UserModel.findOne({ $and: [{ agencia: agenciaOrigem }, { conta: contaOrigem }] }, function (err, usuarioLogado) {
             if (err)
                 return response.status(500).send("Erro ao buscar remetente");
-            var idOrigem = usuarioLogado[0]._id;
+            var idOrigem = usuarioLogado._id;
             // console.log(idOrigem);
-            var saldoOrigem = usuarioLogado[0].saldo;
+            var saldoOrigem = usuarioLogado.saldo;
             // console.log(saldoOrigem);
             if (saldoOrigem < valor) {
                 cliente_model_1.UserModel.findById(({ _id: idOrigem }), function (err, usuarioLogado) {
