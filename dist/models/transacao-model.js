@@ -7,10 +7,10 @@ var Transacao = new mongoose_1.Schema({
         type: String,
         required: true
     },
-    data: {
-        type: Date,
-        required: true
-    },
+    // data: {
+    //     type: Date,
+    //     required: true
+    // },
     agenciaOrigem: {
         type: String,
         required: true
@@ -19,7 +19,7 @@ var Transacao = new mongoose_1.Schema({
         type: String,
         required: true
     },
-    cpfOrigem: {
+    nomeOrigem: {
         type: String,
         required: true
     },
@@ -31,7 +31,7 @@ var Transacao = new mongoose_1.Schema({
         type: String,
         required: true
     },
-    cpfDestino: {
+    nomeDestino: {
         type: String,
         required: true
     },

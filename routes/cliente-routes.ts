@@ -51,7 +51,7 @@ export = (app: Router) =>{
         usuario.save(function (error) {
             if (error)
                 return response.status(500).send("Erro ao cadastrar Cliente: " + error);
-            return response.render('cadastrarUsuario');
+            return response.render('../views/pages/login');
         });
     });
 
@@ -76,7 +76,7 @@ export = (app: Router) =>{
     )
 
     app.get<reqRes>('/transferencia/:id', function (request, response) {
-        let id = request.params.id;
+        let id = request.body.id;
         UserModel.findById(({ _id: id }), (err:any, usuarioLogado:any) =>{
             console.log(usuarioLogado)
             if (err)
@@ -116,8 +116,8 @@ export = (app: Router) =>{
                 
             } else {
                 UserModel.findByIdAndUpdate(idOrigem, {saldo: saldoOrigem - valor}, {new: true}).then((usuarioLogado: User) => {
-                        let listaUsuarioLogado: User[] = [usuarioLogado];
-                        return response.render("../views/pages/usuario", {usuario:listaUsuarioLogado})
+                        let atributosUsuarioLogado: User[] = [usuarioLogado];
+                        return response.render("../views/pages/usuario", {usuario:atributosUsuarioLogado})
                     }
                 )
                  
@@ -132,29 +132,62 @@ export = (app: Router) =>{
                         UserModel.findByIdAndUpdate(idDest, {saldo: saldoDest + valor}, {new: true}) 
                                                        
                         }
+
+                        var transferencia = new TransacaoModel ({
+                            tipo: 'transferencia',
+                            agenciaOrigem: agenciaOrigem,
+                            contaOrigem: contaOrigem,
+                            nomeOrigem: usuarioLogado.nome,
+                            agenciaDestino: agenciaDest,
+                            contaDestino: contaDest,
+                            nomeDestino: destinatario.nome,
+                            valor: valor
+                        })
+                        
+                        transferencia.save(function (error) {
+                            if (error)
+                                return response.status(500).send("Erro ao salvar transação: " + error);
+
+                            console.log(transferencia);
+                            return response.render('../views/pages/index');
+                        });
+        
                     }                     
                 )
-
-                // let transacao = {tipo: 'transferencia',
-                //                 data: now(),
-                //                 agenciaOrigem = agenciaOrigem,
-                //                 contaOrigem = contaOrigem,
-                //                 cpfOrigem = usuarioLogado[0].cpf,
-                //                 agenciaDestino = agenciaDest,
-                //                 contaDestino = contaDest,
-                //                 cpfDestino = destinatario.cpf,
-                //                 valor = valor
-                // }
-
-                
-                // TransacaoModel.save({
-                //     transacao
-                // })
         
             }
               
         })       
     })
+
+
+    app.post<reqRes>('/extratoTransferencias', function (request, response) {
+        let agenciaLogado = request.body.agencia;
+        let contaLogado = request.body.conta;
+        console.log(contaLogado);
+        console.log(agenciaLogado);
+        let consulta = TransacaoModel.find({$or: [
+            {$and: [{ agenciaOrigem: agenciaLogado }, { contaOrigem: contaLogado }]},
+            {$and: [{ agenciaDestino: agenciaLogado }, { contaDestino: contaLogado }]}
+            ]},
+             (err:any, transferencia:any) => {
+            // console.log(transferencia);
+            if (err)
+                return response.status(500).send("Erro ao consultar transferências");
+            response.render("../views/pages/extratoTransferencias", {transferencias: transferencia}); 
+        })
+    })
 }
 
-    
+
+
+
+
+// let consulta = Livro.find(
+//     { $or: [
+//     {tituloLivro: {$regex: new RegExp('.*' + termoPesquisado + '.*', 'i')}},
+//     {nomeAutor: {$regex: new RegExp('.*' + termoPesquisado + '.*', 'i')}},
+//     {editora: {$regex: new RegExp('.*' + termoPesquisado + '.*', 'i')}},
+//     {genero: {$regex: new RegExp('.*' + termoPesquisado + '.*', 'i')}},
+//     // {isbn: termoPesquisado}
+// ]}

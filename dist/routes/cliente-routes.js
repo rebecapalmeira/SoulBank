@@ -1,5 +1,6 @@
 "use strict";
 var cliente_model_1 = require("../models/cliente-model");
+var transacao_model_1 = require("../models/transacao-model");
 module.exports = function (app) {
     app.get('/', function (request, response) {
         response.render('../views/pages/index');
@@ -36,7 +37,7 @@ module.exports = function (app) {
         usuario.save(function (error) {
             if (error)
                 return response.status(500).send("Erro ao cadastrar Cliente: " + error);
-            return response.render('cadastrarUsuario');
+            return response.render('../views/pages/login');
         });
     });
     app.get('/login', function (request, response) {
@@ -57,7 +58,7 @@ module.exports = function (app) {
         });
     });
     app.get('/transferencia/:id', function (request, response) {
-        var id = request.params.id;
+        var id = request.body.id;
         cliente_model_1.UserModel.findById(({ _id: id }), function (err, usuarioLogado) {
             console.log(usuarioLogado);
             if (err)
@@ -88,8 +89,8 @@ module.exports = function (app) {
             }
             else {
                 cliente_model_1.UserModel.findByIdAndUpdate(idOrigem, { saldo: saldoOrigem - valor }, { new: true }).then(function (usuarioLogado) {
-                    var listaUsuarioLogado = [usuarioLogado];
-                    return response.render("../views/pages/usuario", { usuario: listaUsuarioLogado });
+                    var atributosUsuarioLogado = [usuarioLogado];
+                    return response.render("../views/pages/usuario", { usuario: atributosUsuarioLogado });
                 });
                 cliente_model_1.UserModel.findOne({ $and: [{ agencia: agenciaDest }, { conta: contaDest }] }, function (err, destinatario) {
                     if (err) {
@@ -100,21 +101,47 @@ module.exports = function (app) {
                         var saldoDest = parseFloat(destinatario.saldo);
                         cliente_model_1.UserModel.findByIdAndUpdate(idDest, { saldo: saldoDest + valor }, { new: true });
                     }
+                    var transferencia = new transacao_model_1.TransacaoModel({
+                        tipo: 'transferencia',
+                        agenciaOrigem: agenciaOrigem,
+                        contaOrigem: contaOrigem,
+                        nomeOrigem: usuarioLogado.nome,
+                        agenciaDestino: agenciaDest,
+                        contaDestino: contaDest,
+                        nomeDestino: destinatario.nome,
+                        valor: valor
+                    });
+                    transferencia.save(function (error) {
+                        if (error)
+                            return response.status(500).send("Erro ao salvar transação: " + error);
+                        console.log(transferencia);
+                        return response.render('../views/pages/index');
+                    });
                 });
-                // let transacao = {tipo: 'transferencia',
-                //                 data: now(),
-                //                 agenciaOrigem = agenciaOrigem,
-                //                 contaOrigem = contaOrigem,
-                //                 cpfOrigem = usuarioLogado[0].cpf,
-                //                 agenciaDestino = agenciaDest,
-                //                 contaDestino = contaDest,
-                //                 cpfDestino = destinatario.cpf,
-                //                 valor = valor
-                // }
-                // TransacaoModel.save({
-                //     transacao
-                // })
             }
         });
     });
+    app.post('/extratoTransferencias', function (request, response) {
+        var agenciaLogado = request.body.agencia;
+        var contaLogado = request.body.conta;
+        console.log(contaLogado);
+        console.log(agenciaLogado);
+        var consulta = transacao_model_1.TransacaoModel.find({ $or: [
+                { $and: [{ agenciaOrigem: agenciaLogado }, { contaOrigem: contaLogado }] },
+                { $and: [{ agenciaDestino: agenciaLogado }, { contaDestino: contaLogado }] }
+            ] }, function (err, transferencia) {
+            // console.log(transferencia);
+            if (err)
+                return response.status(500).send("Erro ao consultar transferências");
+            response.render("../views/pages/extratoTransferencias", { transferencias: transferencia });
+        });
+    });
 };
+// let consulta = Livro.find(
+//     { $or: [
+//     {tituloLivro: {$regex: new RegExp('.*' + termoPesquisado + '.*', 'i')}},
+//     {nomeAutor: {$regex: new RegExp('.*' + termoPesquisado + '.*', 'i')}},
+//     {editora: {$regex: new RegExp('.*' + termoPesquisado + '.*', 'i')}},
+//     {genero: {$regex: new RegExp('.*' + termoPesquisado + '.*', 'i')}},
+//     // {isbn: termoPesquisado}
+// ]}

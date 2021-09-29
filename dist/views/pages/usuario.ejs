@@ -298,13 +298,32 @@
                                                                            
                                     </div>
                                     <div class="row">
-                                        <div class="col-6">
-                                            <div class="col-6 float-right">
-                                                <div class="col-6 ml-5 float-right">
+                                        <div class="col-4">
+                                            <div class="col-6">
+                                                <div class="col-6 ml-5">
                                                     <input type="hidden" name="id">
                                                     <a href="/transferencia/<%= usuarioLogado._id %>"
-                                                        class="btn btn-dark btn-sm text-uppercase pr-5 pl-5 ml-0">Fazer
+                                                        class="btn btn-dark btn-sm text-uppercase px-5 py-3 ml-0">
                                                         Transferência</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-4">
+                                            <div class="col-6">
+                                                <form class="form col-6 ml-5" action="/extratoTransferencias" method="POST">                                                   
+                                                        <button class="btn btn-dark btn-sm text-uppercase px-5 py-3 ml-0" type="submit">Extrato
+                                                            <input type="hidden" name="agencia" value="<%= usuarioLogado.agencia %>">
+                                                            <input type="hidden" name="conta" value="<%= usuarioLogado.conta %>">
+                                                        </button>
+                                                </form>
+                                            </div>
+                                            
+                                        </div>
+                                        <div class="col-4">
+                                            <div class="col-6">
+                                                <div class="col-6 ml-5">
+                                                    <a href="/login"
+                                                        class="btn btn-dark btn-sm text-uppercase px-5 py-3 ml-0">Sair</a>
                                                 </div>
                                             </div>
                                         </div>

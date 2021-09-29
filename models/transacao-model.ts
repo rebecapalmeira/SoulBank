@@ -2,13 +2,13 @@ import { Schema, model } from 'mongoose';
 
 interface Transacao {
     tipo: string,   
-    data: Date,
+    // data: Date,
     agenciaOrigem: string,
     contaOrigem: string,
-    cpfOrigem: string,
+    nomeOrigem: string,
     agenciaDestino: string,
     contaDestino: string,
-    cpfDestino: string,
+    nomeDestino: string,
     valor: number
 }
 
@@ -17,10 +17,10 @@ const Transacao = new Schema<Transacao>({
         type: String,
         required: true
     },
-    data: {
-        type: Date,
-        required: true
-    },
+    // data: {
+    //     type: Date,
+    //     required: true
+    // },
     agenciaOrigem: {
         type: String,
         required: true
@@ -29,7 +29,7 @@ const Transacao = new Schema<Transacao>({
         type: String,
         required: true
     },
-    cpfOrigem: {
+    nomeOrigem: {
         type: String,
         required: true
     },
@@ -41,7 +41,7 @@ const Transacao = new Schema<Transacao>({
         type: String,
         required: true
     },
-    cpfDestino: {
+    nomeDestino: {
         type: String,
         required: true
     },
