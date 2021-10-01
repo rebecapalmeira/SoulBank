@@ -15,13 +15,13 @@ export = (app: Router) =>{
         response.render('../views/pages/index')
     });
 
-    app.get<reqRes>('/teste', (request, response)=>{
-        response.send('teste funfou')
-    })
+    // app.get<reqRes>('/teste', (request, response)=>{
+    //     response.send('teste funfou')
+    // })
 
-    app.get<reqRes>('/teste', (request, response)=>{
-        response.send('teste funfou')
-    })
+    // app.get<reqRes>('/teste', (request, response)=>{
+    //     response.send('teste funfou')
+    // })
 
     app.get<reqRes>('/cadastrarUsuario', function (request, response) {
         response.render('../views/pages/cadastrarUsuario');
@@ -64,23 +64,37 @@ export = (app: Router) =>{
         let conta = request.body.conta;
         let senha = request.body.senha;
     
-        UserModel.find({ $and: [{ agencia: agencia }, { conta: conta }, { senha: senha }] }, (err, usuarioLogado) => {
+        UserModel.findOne({ $and: [{ agencia: agencia }, { conta: conta }, { senha: senha }] }, (err:any, usuarioLogado:any) => {
             if (err) {
                 return response.status(500).send("Erro ao conectar no banco de dados");
     
             } else { 
-                response.render("../views/pages/usuario", {usuario:usuarioLogado});
+                response.render("../views/pages/usuario", {usuarioLogado:usuarioLogado});
                 };
             }
-        )}
-    )
+        )
+    });
+
+    app.get<reqRes>('/usuario', (request, response) => {
+        let agencia = request.body.agenciaOrigem;
+        let conta = request.body.contaOrigem;
+    
+        UserModel.findOne({ $and: [{ agencia: agencia }, { conta: conta }] }, (err:any, usuarioLogado:any) => {
+            if (err) {
+                return response.status(500).send("Erro ao conectar no banco de dados");
+    
+            } else { 
+                response.render("../views/pages/usuario", {usuarioLogado:usuarioLogado});
+                };
+            }
+        )
+    });
 
     app.get<reqRes>('/transferencia/:id', function (request, response) {
-        let id = request.body.id;
+        let id = request.params.id;
         UserModel.findById(({ _id: id }), (err:any, usuarioLogado:any) =>{
-            console.log(usuarioLogado)
             if (err)
-                return response.status(500).send("Erro ao encontrar página");
+                return response.status(500).send("Erro ao encontrar cliente.");
             
             response.render("../views/pages/transferencia", {usuarioLogado:usuarioLogado})
         })
@@ -93,7 +107,6 @@ export = (app: Router) =>{
 
         let valor = parseFloat(request.body.valor);
         
-        // const idOrigem = request.body.id;
         let agenciaOrigem = request.body.agenciaOrigem;
         let contaOrigem = request.body.contaOrigem;
 
@@ -101,59 +114,62 @@ export = (app: Router) =>{
             if(err) 
                 return response.status(500).send("Erro ao buscar remetente");
 
+            if (agenciaDest === "" || agenciaDest === null || contaDest === "" || contaDest === null) {            
+                return response.render("../views/pages/transferenciaAnulada", {usuarioLogado:usuarioLogado, mensagem:'Informações insuficientes. Campos de Agência e Conta de destino não podem estar vazios.'})
+            }
+
             const idOrigem = usuarioLogado._id;
-            // console.log(idOrigem);
+
             let saldoOrigem = usuarioLogado.saldo;
-            // console.log(saldoOrigem);
+
 
             if (saldoOrigem < valor) {
-                UserModel.findById(({ _id: idOrigem }), (err:any, usuarioLogado:any) =>{
-                    if (err)
-                        return response.status(500).send("Erro ao encontrar página");
-                    
-                    return response.render("../views/pages/transferenciaAnulada", {usuarioLogado:usuarioLogado})
-                })
+                return response.render("../views/pages/transferenciaAnulada", {usuarioLogado:usuarioLogado, mensagem:'Saldo Insuficiente. Para concluir a transferência, informe um valor menor ou igual ao saldo em conta'})
                 
             } else {
                 UserModel.findByIdAndUpdate(idOrigem, {saldo: saldoOrigem - valor}, {new: true}).then((usuarioLogado: User) => {
-                        let atributosUsuarioLogado: User[] = [usuarioLogado];
-                        return response.render("../views/pages/usuario", {usuario:atributosUsuarioLogado})
-                    }
-                )
-                 
-                UserModel.findOne({ $and: [{ agencia: agenciaDest }, { conta: contaDest }] }, (err:any, destinatario:any) => {
-                    if(err) {
-                        return response.status(500).send("Erro ao transferir");
-            
-                    } else { 
-                        const idDest = destinatario._id;
-                        let saldoDest = parseFloat(destinatario.saldo);
-        
-                        UserModel.findByIdAndUpdate(idDest, {saldo: saldoDest + valor}, {new: true}) 
-                                                       
-                        }
-
-                        var transferencia = new TransacaoModel ({
-                            tipo: 'transferencia',
-                            agenciaOrigem: agenciaOrigem,
-                            contaOrigem: contaOrigem,
-                            nomeOrigem: usuarioLogado.nome,
-                            agenciaDestino: agenciaDest,
-                            contaDestino: contaDest,
-                            nomeDestino: destinatario.nome,
-                            valor: valor
-                        })
                         
-                        transferencia.save(function (error) {
-                            if (error)
-                                return response.status(500).send("Erro ao salvar transação: " + error);
+                    UserModel.findOne({ $and: [{ agencia: agenciaDest }, { conta: contaDest }] }, (err:any, destinatario:any) => {
+                        if(err) {
+                            return response.status(500).send("Erro ao encontrar o cliente de destino.");
+                
+                        } else { 
+                            if (destinatario === null) {            
+                                return response.render("../views/pages/transferenciaAnulada", {usuarioLogado:usuarioLogado, mensagem:'Conta/Agência de Destino não encontrados'})
+                            }
 
-                            console.log(transferencia);
-                            return response.render('../views/pages/index');
-                        });
+                            const idDest = destinatario._id;
+                            let saldoDest = destinatario.saldo;
+            
+                            UserModel.findByIdAndUpdate(idDest, {saldo: saldoDest + valor}, {new: true}).then((destinatario:User) => {
+                                var transferencia = new TransacaoModel ({
+                                    tipo: 'transferencia',
+                                    agenciaOrigem: agenciaOrigem,
+                                    contaOrigem: contaOrigem,
+                                    nomeOrigem: usuarioLogado.nome,
+                                    agenciaDestino: agenciaDest,
+                                    contaDestino: contaDest,
+                                    nomeDestino: destinatario.nome,
+                                    valor: valor
+                                })
+                                
+                                transferencia.save(function (error) {
+                                    if (error)
+                                        return response.status(500).send("Erro ao salvar transação: " + error);
         
-                    }                     
-                )
+                                    console.log(transferencia);
+                                    return response.render("../views/pages/usuario", {usuarioLogado:usuarioLogado})
+                                });
+                            }) 
+                        }
+    
+                            
+            
+                    })
+                    
+                })
+                 
+               
         
             }
               
@@ -178,16 +194,3 @@ export = (app: Router) =>{
         })
     })
 }
-
-
-
-
-
-// let consulta = Livro.find(
-//     { $or: [
-//     {tituloLivro: {$regex: new RegExp('.*' + termoPesquisado + '.*', 'i')}},
-//     {nomeAutor: {$regex: new RegExp('.*' + termoPesquisado + '.*', 'i')}},
-//     {editora: {$regex: new RegExp('.*' + termoPesquisado + '.*', 'i')}},
-//     {genero: {$regex: new RegExp('.*' + termoPesquisado + '.*', 'i')}},
-//     // {isbn: termoPesquisado}
-// ]}

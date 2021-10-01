@@ -7,9 +7,12 @@
         </div>
 
         <% if (transferencias == 0) { %>
-            <div class="d-none">
+            <div class="d-flex justify-content-between">
+                <!-- <div>
+                    <a href="/usuario" class="btn btn-primary mr-5">Página Principal</a>
+                </div> -->
                 <div>
-                    <a href="/usuario" class="btn btn-primary mr-5">Página Inicial</a>
+                    <a href="/" class="btn btn-primary mr-5">Home</a>
                 </div>
             </div>
         <% } %>
@@ -46,7 +49,7 @@
                     <% transferencias.forEach(function(transferencia) { %>
                         <tr>
                             <td class="text-center">
-                                <%= transferencia._id %>
+                                <a href="#"><%= transferencia._id %></a>
                             </td>
                             <td class="text-center">
                                 <%= transferencia.agenciaOrigem %>
@@ -72,11 +75,12 @@
                         </tr>
                    <% }) %>
                 </tbody>
-                <!-- <tfoot>
+                <tfoot>
                     <tr>
-                        <td colspan="8"><a href="/"><button class="btn btn-dark">Página Inicial</button></a></td>
+                        <!-- <td colspan="4"><a href="/usuario"><button class="btn btn-dark">Página Principal</button></a></td> -->
+                        <td colspan="4"><a href="/"><button class="btn btn-dark">Home</button></a></td>
                     </tr>
-                </tfoot> -->
+                </tfoot>
             </table>
         </div>                  
     </div>

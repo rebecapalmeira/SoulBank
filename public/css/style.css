@@ -120,22 +120,6 @@ background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 32 32
     background-position: center;
   }
 
-  /* .img-transfer {
-    background-image: url("../image/man-neon.jpeg");
-    background-size: cover;
-    background-position: right;
-    background-repeat: no-repeat;
-    background-clip: border-box;
-    overflow: hidden;
-  } */
-/* 
-  #body-transfer {
-    background-image: url("../image/man-neon.jpeg");     
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: right;
-  } */
-
   /* CSS página cadastro */
   .imglateral-cadastro {
     background-image: url("../image/good-vibes.jpg");
@@ -145,5 +129,5 @@ background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 32 32
   }
 
   #main-extratos {
-    height: 70vh;
+    height: auto;
   }

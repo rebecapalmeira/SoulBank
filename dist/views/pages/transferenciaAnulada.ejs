@@ -3,8 +3,8 @@
     <main class="container mt-5">
         <h1 class="text-center text-uppercase h1-transfer">Transferência</h1>
         <div id="saldoInsuficiente" class="my-5 p-5">
-            <h3 class="text-center">Saldo insuficiente</h3>
-            <h5 class="text-center">Para concluir a transferência, informe um valor menor ou igual ao saldo em conta</h5>
+            <h3 class="text-center"><%= mensagem %></h3>
+            <!-- <h5 class="text-center">Para concluir a transferência, informe um valor menor ou igual ao saldo em conta</h5> -->
         </div>
         <div class="container">
             <div class="row d-flex justify-content-center align-items-center mb-5">
@@ -49,7 +49,7 @@
                                                 <div class="input-group-prepend">
                                                     <span class="input-group-text">Agência</span>
                                                 </div>
-                                                <input type="text" class="form-control" name="agenciaDest" id="agenciaDest" placeholder="Agência destino">
+                                                <input type="text" class="form-control" name="agenciaDest" id="agenciaDest" placeholder="Agência destino" required>
                                             </div>
                                         </div>
                                         <div class="form-group col-sm-6 flex-column d-flex">
@@ -58,7 +58,7 @@
                                                 <div class="input-group-prepend">
                                                     <span class="input-group-text">Conta</span>
                                                 </div>
-                                                <input type="text" class="form-control" name="contaDest" id="contaDest" placeholder="Conta destino">
+                                                <input type="text" class="form-control" name="contaDest" id="contaDest" placeholder="Conta destino" required>
                                             </div>   
                                         </div>                    
                                     </div>
@@ -80,7 +80,7 @@
                                                 <div class="input-group-prepend">
                                                     <span class="input-group-text" id="valor">R$</span>
                                                 </div>
-                                                <input type="text" class="form-control" name="valor" id="valor">
+                                                <input type="text" class="form-control" name="valor" id="valor" required>
                                             </div>  
                                         </div>                    
                                     </div>
@@ -90,7 +90,7 @@
                                         <div class="form-group row">
                                             <div class="col-sm-12">
                                                 <div class="input-group col-12 mb-5 mt-3">
-                                                    <input type="password" class="form-control" name="senha" id="senha" placeholder="Senha">
+                                                    <input type="password" class="form-control" name="senha" id="senha" placeholder="Senha" required>
                                                     <button class="btn btn-dark" type="submit">Confirmar</button>
                                                 </div>
                                             </div>  

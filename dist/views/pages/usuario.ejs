@@ -268,7 +268,6 @@
                 </ul>
             </div>
         </nav>
-
     </header>
 
     <main class="container-fluid mt-5">
@@ -283,7 +282,7 @@
                         <div class="col-md-7 d-flex align-items-center"
                             style="background-color: #6dbddf; border-radius: 0 0 35px 0;">
                             <div class="card-body p-lg-4 text-black">
-                                <% usuario.forEach(function(usuarioLogado) { %>
+
                                     <h1>Olá, <%= usuarioLogado.nome %>!
                                     </h1>
                                                                         
@@ -304,7 +303,8 @@
                                                     <input type="hidden" name="id">
                                                     <a href="/transferencia/<%= usuarioLogado._id %>"
                                                         class="btn btn-dark btn-sm text-uppercase px-5 py-3 ml-0">
-                                                        Transferência</a>
+                                                        Transferência
+                                                    </a>
                                                 </div>
                                             </div>
                                         </div>
@@ -387,19 +387,14 @@
 
     <main class="container mt-5">
 
-
-
-
-
         <div class="row">
             <div class="col-12">
 
                 <div class="col-6 d-flex justify-content-start">
 
-
-                    <% }) %>
-
                 </div>
+            </div>
+        </div>
 
     </main>
     <script>

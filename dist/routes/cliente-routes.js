@@ -5,12 +5,12 @@ module.exports = function (app) {
     app.get('/', function (request, response) {
         response.render('../views/pages/index');
     });
-    app.get('/teste', function (request, response) {
-        response.send('teste funfou');
-    });
-    app.get('/teste', function (request, response) {
-        response.send('teste funfou');
-    });
+    // app.get<reqRes>('/teste', (request, response)=>{
+    //     response.send('teste funfou')
+    // })
+    // app.get<reqRes>('/teste', (request, response)=>{
+    //     response.send('teste funfou')
+    // })
     app.get('/cadastrarUsuario', function (request, response) {
         response.render('../views/pages/cadastrarUsuario');
     });
@@ -47,22 +47,25 @@ module.exports = function (app) {
         var agencia = request.body.agencia;
         var conta = request.body.conta;
         var senha = request.body.senha;
-        cliente_model_1.UserModel.find({ $and: [{ agencia: agencia }, { conta: conta }, { senha: senha }] }, function (err, usuarioLogado) {
+        cliente_model_1.UserModel.findOne({ $and: [{ agencia: agencia }, { conta: conta }, { senha: senha }] }, function (err, usuarioLogado) {
             if (err) {
                 return response.status(500).send("Erro ao conectar no banco de dados");
             }
             else {
-                response.render("../views/pages/usuario", { usuario: usuarioLogado });
+                response.render("../views/pages/usuario", { usuarioLogado: usuarioLogado });
             }
             ;
         });
     });
+    // app.get<reqRes>('/usuario', function (request, response) {
+    //     response.render('../views/pages/usuario');
+    // });
     app.get('/transferencia/:id', function (request, response) {
-        var id = request.body.id;
+        var id = request.params.id;
         cliente_model_1.UserModel.findById(({ _id: id }), function (err, usuarioLogado) {
-            console.log(usuarioLogado);
+            // console.log(usuarioLogado)
             if (err)
-                return response.status(500).send("Erro ao encontrar página");
+                return response.status(500).send("Erro ao encontrar cliente.");
             response.render("../views/pages/transferencia", { usuarioLogado: usuarioLogado });
         });
     });
@@ -89,8 +92,7 @@ module.exports = function (app) {
             }
             else {
                 cliente_model_1.UserModel.findByIdAndUpdate(idOrigem, { saldo: saldoOrigem - valor }, { new: true }).then(function (usuarioLogado) {
-                    var atributosUsuarioLogado = [usuarioLogado];
-                    return response.render("../views/pages/usuario", { usuario: atributosUsuarioLogado });
+                    return response.render("../views/pages/usuario", { usuarioLogado: usuarioLogado });
                 });
                 cliente_model_1.UserModel.findOne({ $and: [{ agencia: agenciaDest }, { conta: contaDest }] }, function (err, destinatario) {
                     if (err) {
