@@ -1,87 +1,114 @@
 <%- include("../partials/header-alt") %>
 
-<main class="container mt-5" id="main-extratos">
+<main class="container-fluid mt-5" id="main-extratos">
     <div class="row">
         <div class="col-12">
-            <h1 class="display-4 text-center">Transferências</h1>
-        </div>
+            <h2 class="display-4 mb-5 text-center">Olá, <%= usuarioLogado.nome %></h2>
+            <h2 class="text-center">Transferências</h2>
+        </div>        
 
-        <% if (transferencias == 0) { %>
-            <div class="d-flex justify-content-between">
-                <!-- <div>
-                    <a href="/usuario" class="btn btn-primary mr-5">Página Principal</a>
-                </div> -->
+        <div class="container-fluid p-5">
+            <div class="d-flex justify-content-around">
                 <div>
-                    <a href="/" class="btn btn-primary mr-5">Home</a>
+                    <h2 class="text-center">Transferências Recebidas</h2>
+
+                    <table class="table table-hover table-striped table-light mt-5 mb-5">
+                        <thead>
+                            <tr>
+                                <th class="text-center">ID da Transação</th>
+                                <th class="text-center">Agencia Origem</th>
+                                <th class="text-center">Conta Origem</th>
+                                <th class="text-center">Quem Transferiu</th>                                                                                                                       
+                                <th class="text-center">Valor</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% if (transferenciasRecebidas == 0) { %>
+                                <tr>
+                                    <td colspan="8" class="alert alert-primary text-center text-uppercase" role="alert">
+                                        Não existem registros de transferências recebidas vinculadas à sua conta.
+                                    </td>
+                                </tr>
+                            <% } %>
+                            <% transferenciasRecebidas.forEach(function(transferencia) { %>
+                                <tr>
+                                    <td class="text-center">
+                                        <a href="#"><%= transferencia._id %></a>
+                                    </td>
+                                    <td class="text-center">
+                                        <%= transferencia.agenciaOrigem %>
+                                    </td>
+                                    <td class="text-center">
+                                        <%= transferencia.contaOrigem %>
+                                    </td>
+                                    <td class="text-center">
+                                        <%= transferencia.nomeOrigem %>
+                                    </td>    
+                                    <td class="text-center">
+                                        <%= transferencia.valor %>
+                                    </td>   
+                                </tr>
+                        <% }) %>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <!-- <td colspan="4"><a href="/usuario"><button class="btn btn-dark">Página Principal</button></a></td> -->
+                                <td colspan="4"><a href="/usuario/<%= usuarioLogado._id %>"><button class="btn btn-dark">Voltar</button></a></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+
+                <div>
+                    <h2 class="text-center">Transferências Enviadas</h2>
+
+                    <table class="table table-hover table-striped table-light mt-5 mb-5">
+                        <thead>
+                            <tr>
+                                <th class="text-center">ID da Transação</th>
+                                <th class="text-center">Agencia Destino</th>
+                                <th class="text-center">Conta Destino</th>
+                                <th class="text-center">Quem Recebeu</th>                                                                                                                       
+                                <th class="text-center">Valor</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% if (transferenciasEnviadas == 0) { %>
+                                <tr>
+                                    <td colspan="8" class="alert alert-primary text-center text-uppercase" role="alert">
+                                        Não existem registros de transferências enviadas vinculadas à sua conta.
+                                    </td>
+                                </tr>
+                            <% } %>
+                            <% transferenciasEnviadas.forEach(function(transferencia) { %>
+                                <tr>
+                                    <td class="text-center">
+                                        <a href="#"><%= transferencia._id %></a>
+                                    </td>
+                                    <td class="text-center">
+                                        <%= transferencia.agenciaDestino %>
+                                    </td>
+                                    <td class="text-center">
+                                        <%= transferencia.contaDestino %>
+                                    </td>
+                                    <td class="text-center">
+                                        <%= transferencia.nomeDestino %>
+                                    </td>    
+                                    <td class="text-center">
+                                        <%= transferencia.valor %>
+                                    </td>   
+                                </tr>
+                        <% }) %>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="4"><a href="/"><button class="btn btn-dark">Home</button></a></td>
+                            </tr>
+                        </tfoot>
+                    </table>
                 </div>
             </div>
-        <% } %>
-        
-
-        <div class="container">
-            <!-- <h3>Recebidas</h3> -->
-            <table class="table table-hover table-striped table-light mt-5 mb-5">
-                <thead>
-                    <tr>
-                        <th class="text-center">ID da Transação</th>
-                        <th class="text-center">Agencia Origem</th>
-                        <th class="text-center">Conta Origem</th>
-                        <th class="text-center">Quem Transferiu</th>                                                             
-                        <th class="text-center">Agencia Destino</th>                                                             
-                        <th class="text-center">Conta Destino</th>                                                             
-                        <th class="text-center">Quem Recebeu</th>                                                             
-                        <th class="text-center">Valor</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <% if (transferencias == 0) { %>
-                        <tr>
-                            <td colspan="8" class="alert alert-primary text-center text-uppercase" role="alert">
-                                Não existem registros de transferências vinculados à sua conta.
-                            </td>
-                            <td>                                        
-                                <div class="d-flex justify-content-center">
-                                    <a href="/" class="btn btn-primary">Página Inicial</a>
-                                </div>                               
-                            </td>
-                        </tr>
-                    <% } %>
-                    <% transferencias.forEach(function(transferencia) { %>
-                        <tr>
-                            <td class="text-center">
-                                <a href="#"><%= transferencia._id %></a>
-                            </td>
-                            <td class="text-center">
-                                <%= transferencia.agenciaOrigem %>
-                            </td>
-                            <td class="text-center">
-                                <%= transferencia.contaOrigem %>
-                            </td>
-                            <td class="text-center">
-                                <%= transferencia.nomeOrigem %>
-                            </td>
-                            <td class="text-center">
-                                <%= transferencia.agenciaDestino %>
-                            </td>     
-                            <td class="text-center">
-                                <%= transferencia.contaDestino %>
-                            </td>     
-                            <td class="text-center">
-                                <%= transferencia.nomeDestino %>
-                            </td>     
-                            <td class="text-center">
-                                <%= transferencia.valor %>
-                            </td>   
-                        </tr>
-                   <% }) %>
-                </tbody>
-                <tfoot>
-                    <tr>
-                        <!-- <td colspan="4"><a href="/usuario"><button class="btn btn-dark">Página Principal</button></a></td> -->
-                        <td colspan="4"><a href="/"><button class="btn btn-dark">Home</button></a></td>
-                    </tr>
-                </tfoot>
-            </table>
+           
         </div>                  
     </div>
 </main>

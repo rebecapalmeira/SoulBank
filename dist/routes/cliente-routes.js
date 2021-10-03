@@ -1,16 +1,10 @@
 "use strict";
 var cliente_model_1 = require("../models/cliente-model");
-var transacao_model_1 = require("../models/transacao-model");
+var transferencia_model_1 = require("../models/transferencia-model");
 module.exports = function (app) {
     app.get('/', function (request, response) {
         response.render('../views/pages/index');
     });
-    // app.get<reqRes>('/teste', (request, response)=>{
-    //     response.send('teste funfou')
-    // })
-    // app.get<reqRes>('/teste', (request, response)=>{
-    //     response.send('teste funfou')
-    // })
     app.get('/cadastrarUsuario', function (request, response) {
         response.render('../views/pages/cadastrarUsuario');
     });
@@ -25,7 +19,6 @@ module.exports = function (app) {
             conta: '',
             saldo: 0
         });
-        // console.log(request.body);
         usuario.nome = request.body.nome;
         usuario.email = request.body.email;
         usuario.senha = request.body.senha;
@@ -41,7 +34,7 @@ module.exports = function (app) {
         });
     });
     app.get('/login', function (request, response) {
-        response.render('../views/pages/login');
+        response.render('../views/pages/login', { mensagem: null });
     });
     app.post('/login', function (request, response) {
         var agencia = request.body.agencia;
@@ -51,99 +44,120 @@ module.exports = function (app) {
             if (err) {
                 return response.status(500).send("Erro ao conectar no banco de dados");
             }
+            else if (usuarioLogado === null) {
+                return response.render("../views/pages/login", { mensagem: "Cliente não encontrado. Certifique-se de ter informado os dados corretos." });
+            }
             else {
                 response.render("../views/pages/usuario", { usuarioLogado: usuarioLogado });
             }
-            ;
         });
     });
-    // app.get<reqRes>('/usuario', function (request, response) {
-    //     response.render('../views/pages/usuario');
-    // });
+    app.get('/usuario', function (request, response) {
+        var agencia = request.body.agencia;
+        var conta = request.body.conta;
+        cliente_model_1.UserModel.findOne({ $and: [{ agencia: agencia }, { conta: conta }] }, function (err, usuarioLogado) {
+            if (err) {
+                return response.status(500).send("Erro ao conectar no banco de dados");
+            }
+            else if (usuarioLogado === null) {
+                return response.render("../views/pages/login", { mensagem: "Cliente não encontrado. Certifique-se de ter informado os dados corretos." });
+            }
+            else {
+                response.render("../views/pages/usuario", { usuarioLogado: usuarioLogado });
+            }
+        });
+    });
+    app.get('/usuario/:id', function (request, response) {
+        var idLogado = request.params.id;
+        cliente_model_1.UserModel.findById(({ _id: idLogado }), function (err, usuarioLogado) {
+            if (err)
+                return response.status(500).send("Erro ao encontrar cliente.");
+            response.render("../views/pages/usuario", { usuarioLogado: usuarioLogado });
+        });
+    });
     app.get('/transferencia/:id', function (request, response) {
         var id = request.params.id;
         cliente_model_1.UserModel.findById(({ _id: id }), function (err, usuarioLogado) {
-            // console.log(usuarioLogado)
             if (err)
                 return response.status(500).send("Erro ao encontrar cliente.");
-            response.render("../views/pages/transferencia", { usuarioLogado: usuarioLogado });
+            response.render("../views/pages/transferencia", { usuarioLogado: usuarioLogado, mensagem: null });
         });
     });
     app.post('/transferencia', function (request, response) {
         var agenciaDest = request.body.agenciaDest;
         var contaDest = request.body.contaDest;
         var valor = parseFloat(request.body.valor);
-        // const idOrigem = request.body.id;
         var agenciaOrigem = request.body.agenciaOrigem;
         var contaOrigem = request.body.contaOrigem;
         cliente_model_1.UserModel.findOne({ $and: [{ agencia: agenciaOrigem }, { conta: contaOrigem }] }, function (err, usuarioLogado) {
             if (err)
-                return response.status(500).send("Erro ao buscar remetente");
+                return response.status(500).send("Erro ao buscar cliente da conta de origem");
+            if (agenciaDest === "" || agenciaDest === null || contaDest === "" || contaDest === null) {
+                return response.render("../views/pages/transferencia", { usuarioLogado: usuarioLogado, mensagem: 'Informações insuficientes. Campos de Agência e Conta de destino não podem ficar vazios.' });
+            }
             var idOrigem = usuarioLogado._id;
-            // console.log(idOrigem);
             var saldoOrigem = usuarioLogado.saldo;
-            // console.log(saldoOrigem);
             if (saldoOrigem < valor) {
-                cliente_model_1.UserModel.findById(({ _id: idOrigem }), function (err, usuarioLogado) {
-                    if (err)
-                        return response.status(500).send("Erro ao encontrar página");
-                    return response.render("../views/pages/transferenciaAnulada", { usuarioLogado: usuarioLogado });
-                });
+                return response.render("../views/pages/transferencia", { usuarioLogado: usuarioLogado, mensagem: 'Saldo Insuficiente. Para concluir a transferência, informe um valor menor ou igual ao saldo em conta' });
             }
             else {
                 cliente_model_1.UserModel.findByIdAndUpdate(idOrigem, { saldo: saldoOrigem - valor }, { new: true }).then(function (usuarioLogado) {
-                    return response.render("../views/pages/usuario", { usuarioLogado: usuarioLogado });
-                });
-                cliente_model_1.UserModel.findOne({ $and: [{ agencia: agenciaDest }, { conta: contaDest }] }, function (err, destinatario) {
-                    if (err) {
-                        return response.status(500).send("Erro ao transferir");
-                    }
-                    else {
-                        var idDest = destinatario._id;
-                        var saldoDest = parseFloat(destinatario.saldo);
-                        cliente_model_1.UserModel.findByIdAndUpdate(idDest, { saldo: saldoDest + valor }, { new: true });
-                    }
-                    var transferencia = new transacao_model_1.TransacaoModel({
-                        tipo: 'transferencia',
-                        agenciaOrigem: agenciaOrigem,
-                        contaOrigem: contaOrigem,
-                        nomeOrigem: usuarioLogado.nome,
-                        agenciaDestino: agenciaDest,
-                        contaDestino: contaDest,
-                        nomeDestino: destinatario.nome,
-                        valor: valor
-                    });
-                    transferencia.save(function (error) {
-                        if (error)
-                            return response.status(500).send("Erro ao salvar transação: " + error);
-                        console.log(transferencia);
-                        return response.render('../views/pages/index');
+                    cliente_model_1.UserModel.findOne({ $and: [{ agencia: agenciaDest }, { conta: contaDest }] }, function (err, destinatario) {
+                        if (err) {
+                            return response.status(500).send("Erro ao encontrar o cliente de destino.");
+                        }
+                        else {
+                            if (destinatario === null) {
+                                return response.render("../views/pages/transferencia", { usuarioLogado: usuarioLogado, mensagem: 'Conta/Agência de Destino não encontrados' });
+                            }
+                            var idDest = destinatario._id;
+                            var saldoDest = destinatario.saldo;
+                            cliente_model_1.UserModel.findByIdAndUpdate(idDest, { saldo: saldoDest + valor }, { new: true }).then(function (destinatario) {
+                                var transferencia = new transferencia_model_1.TransferenciaModel({
+                                    tipo: 'transferencia',
+                                    agenciaOrigem: agenciaOrigem,
+                                    contaOrigem: contaOrigem,
+                                    nomeOrigem: usuarioLogado.nome,
+                                    agenciaDestino: agenciaDest,
+                                    contaDestino: contaDest,
+                                    nomeDestino: destinatario.nome,
+                                    valor: valor
+                                });
+                                transferencia.save(function (error) {
+                                    if (error)
+                                        return response.status(500).send("Erro ao salvar transação: " + error);
+                                    return response.render("../views/pages/usuario", { usuarioLogado: usuarioLogado });
+                                });
+                            });
+                        }
                     });
                 });
             }
         });
     });
-    app.post('/extratoTransferencias', function (request, response) {
+    app.post('/extratoTransferencias/:id', function (request, response) {
         var agenciaLogado = request.body.agencia;
         var contaLogado = request.body.conta;
-        console.log(contaLogado);
-        console.log(agenciaLogado);
-        var consulta = transacao_model_1.TransacaoModel.find({ $or: [
-                { $and: [{ agenciaOrigem: agenciaLogado }, { contaOrigem: contaLogado }] },
-                { $and: [{ agenciaDestino: agenciaLogado }, { contaDestino: contaLogado }] }
-            ] }, function (err, transferencia) {
-            // console.log(transferencia);
-            if (err)
-                return response.status(500).send("Erro ao consultar transferências");
-            response.render("../views/pages/extratoTransferencias", { transferencias: transferencia });
+        var usuarioLogado = request.body.id;
+        cliente_model_1.UserModel.findById(({ _id: usuarioLogado }), function (err, usuarioLogado) {
+            if (err) {
+                return response.status(500).send("Erro ao encontrar cliente e as transferências associadas ao cliente.");
+            }
+            else {
+                transferencia_model_1.TransferenciaModel.find({ $or: [
+                        { $and: [{ agenciaOrigem: agenciaLogado }, { contaOrigem: contaLogado }] },
+                        { $and: [{ agenciaDestino: agenciaLogado }, { contaDestino: contaLogado }] }
+                    ] }, function (err, transferencias) {
+                    if (err) {
+                        return response.status(500).send("Erro ao consultar transferências");
+                    }
+                    var transferenciasEnviadas = transferencias.filter(function (transferencia) { if (transferencia.agenciaOrigem === agenciaLogado)
+                        return transferencia; });
+                    var transferenciasRecebidas = transferencias.filter(function (transferencia) { if (transferencia.agenciaDestino === agenciaLogado)
+                        return transferencia; });
+                    return response.render("../views/pages/extratoTransferencias", { transferenciasEnviadas: transferenciasEnviadas, transferenciasRecebidas: transferenciasRecebidas, usuarioLogado: usuarioLogado });
+                });
+            }
         });
     });
 };
-// let consulta = Livro.find(
-//     { $or: [
-//     {tituloLivro: {$regex: new RegExp('.*' + termoPesquisado + '.*', 'i')}},
-//     {nomeAutor: {$regex: new RegExp('.*' + termoPesquisado + '.*', 'i')}},
-//     {editora: {$regex: new RegExp('.*' + termoPesquisado + '.*', 'i')}},
-//     {genero: {$regex: new RegExp('.*' + termoPesquisado + '.*', 'i')}},
-//     // {isbn: termoPesquisado}
-// ]}

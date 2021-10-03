@@ -1,44 +1,39 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Transacao = exports.TransacaoModel = void 0;
+exports.UserModel = void 0;
 var mongoose_1 = require("mongoose");
-var Transacao = new mongoose_1.Schema({
-    tipo: {
+var Usuario = new mongoose_1.Schema({
+    nome: {
         type: String,
         required: true
     },
-    // data: {
-    //     type: Date,
-    //     required: true
-    // },
-    agenciaOrigem: {
+    email: {
         type: String,
         required: true
     },
-    contaOrigem: {
+    senha: {
         type: String,
         required: true
     },
-    nomeOrigem: {
+    cpf: {
         type: String,
         required: true
     },
-    agenciaDestino: {
+    contato: {
         type: String,
         required: true
     },
-    contaDestino: {
+    agencia: {
         type: String,
         required: true
     },
-    nomeDestino: {
+    conta: {
         type: String,
         required: true
     },
-    valor: {
+    saldo: {
         type: Number,
         required: true
     }
 });
-exports.Transacao = Transacao;
-exports.TransacaoModel = (0, mongoose_1.model)('Transacao', Transacao);
+exports.UserModel = (0, mongoose_1.model)('User', Usuario);

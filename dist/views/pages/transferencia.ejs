@@ -2,6 +2,13 @@
 
     <main class="container mt-5">
         <h1 class="text-center text-uppercase h1-transfer my-5">Transferência</h1>
+
+        <% if (mensagem !== null) { %>
+            <div id="saldoInsuficiente" class="my-5 p-5">
+                <h5 class="text-center"><%= mensagem %></h5>
+            </div>
+        <% } %>
+
         <div class="container">
             <div class="row d-flex justify-content-center align-items-center mb-5">
                 <div class="col col-lg-11 mx-2">
@@ -14,95 +21,91 @@
                         <div class="col-md-7 d-flex align-items-center"
                             style="background-color: #6dbddf; border-radius: 0 0 35px 0;">
                             <div class="card-body p-lg-4 text-black">
-                              <form class="form-card" method="POST" action="/transferencia">
-                                <div class="row justify-content-between text-left">
-                                    <h4 class="mt-2 mb-2">Dados da Conta de Origem</h4>
-                                  <div class="form-group col-sm-6 flex-column d-flex">
-                                    <label for="agenciaOrigem">Agência de Origem</label>
-                                    <div class="input-group">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text">Agência</span>
-                                        </div>
-                                        <input type="text" class="form-control" name="agenciaOrigem" id="agenciaOrigem" value="<%= usuarioLogado.agencia %>">
-                                    </div>
-                                  </div>
-                                  <div class="form-group col-sm-6 flex-column d-flex">
-                                    <label for="contaOrigem">Conta de Origem</label>
-                                    <div class="input-group">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text">Conta</span>
-                                        </div>
-                                        <input type="text" class="form-control" name="contaOrigem" id="contaOrigem" value="<%= usuarioLogado.conta %>">
-                                    </div>
-                                  </div>                    
-                                </div>
 
-                                <div class="row justify-content-between text-left">
-                                    <h4 class="mt-2 mb-2">Dados da Conta de Destino</h4>
+                                <form class="form-card" method="POST" action="/transferencia">
+                                    <div class="row justify-content-between text-left">
+                                        <h4 class="mt-2 mb-2">Dados da Conta de Origem</h4>
                                     <div class="form-group col-sm-6 flex-column d-flex">
-                                        <label for="agenciaOrigem">Agência de Destino</label>
+                                        <label for="agenciaOrigem">Agência de Origem</label>
                                         <div class="input-group">
                                             <div class="input-group-prepend">
                                                 <span class="input-group-text">Agência</span>
                                             </div>
-                                            <input type="text" class="form-control" name="agenciaDest" id="agenciaDest" placeholder="Agência destino" required>
+                                            <input type="text" class="form-control" name="agenciaOrigem" id="agenciaOrigem" value="<%= usuarioLogado.agencia %>">
                                         </div>
                                     </div>
                                     <div class="form-group col-sm-6 flex-column d-flex">
-                                        <label for="contaOrigem">Conta de Destino</label>
+                                        <label for="contaOrigem">Conta de Origem</label>
                                         <div class="input-group">
                                             <div class="input-group-prepend">
                                                 <span class="input-group-text">Conta</span>
                                             </div>
-                                            <input type="text" class="form-control" name="contaDest" id="contaDest" placeholder="Conta destino" required>
-                                        </div>   
-                                    </div>                    
-                                </div>
-
-                                <div class="row justify-content-between text-left">
-                                    <h4 class="mt-2 mb-2">Informações para Transferência</h4>
-                                    <div class="form-group col-sm-6 flex-column d-flex">
-                                        <label for="agenciaOrigem">Saldo em Conta</label>
-                                        <div class="input-group">
-                                            <div class="input-group-prepend">
-                                                <span class="input-group-text" id="saldo">R$</span>
-                                            </div>
-                                            <input type="text" class="form-control" name="saldo" id="saldo" value="<%= usuarioLogado.saldo %>">
+                                            <input type="text" class="form-control" name="contaOrigem" id="contaOrigem" value="<%= usuarioLogado.conta %>">
                                         </div>
-                                    </div>
-                                    <div class="form-group col-sm-6 flex-column d-flex">
-                                        <label for="contaOrigem">Valor a Transferir</label>
-                                        <div class="input-group">
-                                            <div class="input-group-prepend">
-                                                <span class="input-group-text" id="valor">R$</span>
-                                            </div>
-                                            <input type="text" class="form-control" name="valor" id="valor" required>
-                                        </div>  
                                     </div>                    
-                                </div>
+                                    </div>
 
-                                <div class="row justify-content-between text-left">
-                                    <h4 class="mt-2 mb-2">Confirmar Transação</h4>
-                                    <div class="form-group row">
-                                        <div class="col-sm-12">
-                                            <div class="input-group col-12 mb-5 mt-3">
+                                    <div class="row justify-content-between text-left">
+                                        <h4 class="mt-2 mb-2">Dados da Conta de Destino</h4>
+                                        <div class="form-group col-sm-6 flex-column d-flex">
+                                            <label for="agenciaOrigem">Agência de Destino</label>
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text">Agência</span>
+                                                </div>
+                                                <input type="text" class="form-control" name="agenciaDest" id="agenciaDest" placeholder="Agência destino" required>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-sm-6 flex-column d-flex">
+                                            <label for="contaOrigem">Conta de Destino</label>
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text">Conta</span>
+                                                </div>
+                                                <input type="text" class="form-control" name="contaDest" id="contaDest" placeholder="Conta destino" required>
+                                            </div>   
+                                        </div>                    
+                                    </div>
+
+                                    <div class="row justify-content-between text-left">
+                                        <h4 class="mt-2 mb-2">Informações para Transferência</h4>
+                                        <div class="form-group col-sm-6 flex-column d-flex">
+                                            <label for="agenciaOrigem">Saldo em Conta</label>
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text" id="saldo">R$</span>
+                                                </div>
+                                                <input type="text" class="form-control" name="saldo" id="saldo" value="<%= usuarioLogado.saldo.toFixed(2) %>">
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-sm-6 flex-column d-flex">
+                                            <label for="contaOrigem">Valor a Transferir</label>
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text" id="valor">R$</span>
+                                                </div>
+                                                <input type="text" class="form-control" name="valor" id="valor" required>
+                                            </div>  
+                                        </div>                    
+                                    </div>
+
+
+                                    <div class="row text-left">
+                                        <h4 class="mt-2 mb-2">Confirmar Transação</h4>
+                                        <div class="form-group col-12 row">
+                                            <div class="input-group col-6">
                                                 <input type="password" class="form-control" name="senha" id="senha" placeholder="Senha" required>
                                                 <button class="btn btn-dark" type="submit">Confirmar</button>
                                             </div>
-                                        </div>  
-
-
-                                        <div>
-                                            <div><input type="hidden" name="nome" value="<%= usuarioLogado.nome %>"></div>
-                                            <div><input type="hidden" name="email" value="<%= usuarioLogado.email %>"></div>
-                                            <div><input type="hidden" name="contato" value="<%= usuarioLogado.contato %>"></div>
-                                            <div><input type="hidden" name="cpf" value="<%= usuarioLogado.cpf %>"></div>
-                                            <div><input type="hidden" name="senha" value="<%= usuarioLogado.senha %>"></div>
-                                        </div>
-                                    </div>               
-                                </div>
-                                                    
-                              </form>
+                                            <div class="input-group col-6 justify-content-end">
+                                                <a href="/usuario/<%= usuarioLogado._id %>" class="btn btn-dark" type="submit">                                                       
+                                                    Cancelar
+                                                </a>
+                                            </div>  
+                                        </div>               
+                                    </div>
+                                                        
+                                </form>
                             </div>
                         </div>
                     </div>

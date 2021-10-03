@@ -12,10 +12,14 @@
                         style="background-color: #6dbddf; border-radius: 0 0 35px 0;">
                         <div class="card-body p-lg-4 text-black">
                             <form action="/login" method="POST">
-                                <div class="d-flex align-items-center mb-3 pb-1">
-                                </div>
-                                <h5 class="fw-normal mb-3 pb-3 text-center" style="letter-spacing: 1px; font-size: 25px;">Faça o seu login
-                                </h5>
+                                <div class="d-flex align-items-center mb-3 pb-1"></div>
+
+                                <% if (mensagem !== null) { %>
+                                    <h6 class="text-center p-3 mensagem-login"><%= mensagem %></h6>
+                                <% } %>
+
+                                <h5 class="fw-normal mb-3 pb-3 text-center" style="letter-spacing: 1px; font-size: 25px;">Faça o seu login</h5>
+                                
                                 <div class="form-outline mb-2" style="font-weight: 500;"">
                                     <label for="agencia">Agência</label>
                                     <input type="text" class="form-control" name="agencia" id="agencia"
@@ -27,6 +31,7 @@
                                         <input type="text" class="form-control" name="conta" id="conta"
                                             placeholder="Conta">
                                     </div>
+
                                     <div class="form-outline mb-2">
                                         <div class="form-group" style="font-weight: 500;">
                                             <label for="senha">Senha</label>
@@ -37,6 +42,8 @@
                                             <button class="btn btn-dark btn-lg btn-block"
                                                 type="submit">Login</button>
                                         </div>
+                                    </div>
+                                </div>
                             </form>
                             <a class="mb-1" href="#!" style="color: black; font-size: 13px;">Esqueceu a sua senha?</a>
                             <p class="mb-1 pb-lg-2">Ainda não possui uma conta? <a

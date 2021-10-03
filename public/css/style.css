@@ -131,3 +131,8 @@ background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 32 32
   #main-extratos {
     height: auto;
   }
+
+  .mensagem-login {
+    background-color: rgb(255, 232, 213);
+    border-radius: 10px;
+  }

@@ -2,7 +2,7 @@ import { Request, Response, Router } from 'express';
 import { textChangeRangeIsUnchanged } from 'typescript';
 import { UserModel } from '../models/cliente-model';
 import { User } from '../models/cliente-model';
-import { Transacao, TransacaoModel } from '../models/transacao-model';
+import { Transferencia, TransferenciaModel } from '../models/transferencia-model';
 
 interface reqRes{
     req: Request, 
@@ -14,14 +14,6 @@ export = (app: Router) =>{
     app.get<reqRes>('/', (request, response)=>{
         response.render('../views/pages/index')
     });
-
-    // app.get<reqRes>('/teste', (request, response)=>{
-    //     response.send('teste funfou')
-    // })
-
-    // app.get<reqRes>('/teste', (request, response)=>{
-    //     response.send('teste funfou')
-    // })
 
     app.get<reqRes>('/cadastrarUsuario', function (request, response) {
         response.render('../views/pages/cadastrarUsuario');
@@ -38,7 +30,7 @@ export = (app: Router) =>{
             conta: '',
             saldo: 0
         });
-        // console.log(request.body);
+
         usuario.nome = request.body.nome;
         usuario.email = request.body.email;
         usuario.senha = request.body.senha;
@@ -56,7 +48,7 @@ export = (app: Router) =>{
     });
 
     app.get<reqRes>('/login', function (request, response) {
-        response.render('../views/pages/login');
+        response.render('../views/pages/login', {mensagem: null});
     });
 
     app.post<reqRes>('/login', (request, response) => {
@@ -68,35 +60,50 @@ export = (app: Router) =>{
             if (err) {
                 return response.status(500).send("Erro ao conectar no banco de dados");
     
+            } else if (usuarioLogado === null) {
+                return response.render("../views/pages/login", {mensagem:"Cliente não encontrado. Certifique-se de ter informado os dados corretos."})
+
             } else { 
                 response.render("../views/pages/usuario", {usuarioLogado:usuarioLogado});
-                };
             }
-        )
+        })
     });
 
     app.get<reqRes>('/usuario', (request, response) => {
-        let agencia = request.body.agenciaOrigem;
-        let conta = request.body.contaOrigem;
+        let agencia = request.body.agencia;
+        let conta = request.body.conta;
     
         UserModel.findOne({ $and: [{ agencia: agencia }, { conta: conta }] }, (err:any, usuarioLogado:any) => {
             if (err) {
                 return response.status(500).send("Erro ao conectar no banco de dados");
     
+            } else if (usuarioLogado === null) {
+                return response.render("../views/pages/login", {mensagem:"Cliente não encontrado. Certifique-se de ter informado os dados corretos."})
             } else { 
                 response.render("../views/pages/usuario", {usuarioLogado:usuarioLogado});
-                };
             }
-        )
+        })
     });
 
+    app.get<reqRes>('/usuario/:id', (request, response) => {
+        let idLogado = request.params.id;
+
+        UserModel.findById(({ _id: idLogado }), (err:any, usuarioLogado:any) =>{
+            if (err)
+                return response.status(500).send("Erro ao encontrar cliente.");
+            
+            response.render("../views/pages/usuario", {usuarioLogado:usuarioLogado})
+        })
+    });
+
+    
     app.get<reqRes>('/transferencia/:id', function (request, response) {
         let id = request.params.id;
         UserModel.findById(({ _id: id }), (err:any, usuarioLogado:any) =>{
             if (err)
                 return response.status(500).send("Erro ao encontrar cliente.");
             
-            response.render("../views/pages/transferencia", {usuarioLogado:usuarioLogado})
+            response.render("../views/pages/transferencia", {usuarioLogado:usuarioLogado, mensagem: null})
         })
     });
 
@@ -112,19 +119,18 @@ export = (app: Router) =>{
 
         UserModel.findOne({ $and: [{ agencia: agenciaOrigem }, { conta: contaOrigem }] }, (err:any, usuarioLogado:any) => {
             if(err) 
-                return response.status(500).send("Erro ao buscar remetente");
+                return response.status(500).send("Erro ao buscar cliente da conta de origem");
 
             if (agenciaDest === "" || agenciaDest === null || contaDest === "" || contaDest === null) {            
-                return response.render("../views/pages/transferenciaAnulada", {usuarioLogado:usuarioLogado, mensagem:'Informações insuficientes. Campos de Agência e Conta de destino não podem estar vazios.'})
+                return response.render("../views/pages/transferencia", {usuarioLogado:usuarioLogado, mensagem:'Informações insuficientes. Campos de Agência e Conta de destino não podem ficar vazios.'})
             }
 
             const idOrigem = usuarioLogado._id;
-
             let saldoOrigem = usuarioLogado.saldo;
 
 
             if (saldoOrigem < valor) {
-                return response.render("../views/pages/transferenciaAnulada", {usuarioLogado:usuarioLogado, mensagem:'Saldo Insuficiente. Para concluir a transferência, informe um valor menor ou igual ao saldo em conta'})
+                return response.render("../views/pages/transferencia", {usuarioLogado:usuarioLogado, mensagem:'Saldo Insuficiente. Para concluir a transferência, informe um valor menor ou igual ao saldo em conta'})
                 
             } else {
                 UserModel.findByIdAndUpdate(idOrigem, {saldo: saldoOrigem - valor}, {new: true}).then((usuarioLogado: User) => {
@@ -135,14 +141,14 @@ export = (app: Router) =>{
                 
                         } else { 
                             if (destinatario === null) {            
-                                return response.render("../views/pages/transferenciaAnulada", {usuarioLogado:usuarioLogado, mensagem:'Conta/Agência de Destino não encontrados'})
+                                return response.render("../views/pages/transferencia", {usuarioLogado:usuarioLogado, mensagem:'Conta/Agência de Destino não encontrados'})
                             }
 
                             const idDest = destinatario._id;
                             let saldoDest = destinatario.saldo;
             
                             UserModel.findByIdAndUpdate(idDest, {saldo: saldoDest + valor}, {new: true}).then((destinatario:User) => {
-                                var transferencia = new TransacaoModel ({
+                                var transferencia = new TransferenciaModel ({
                                     tipo: 'transferencia',
                                     agenciaOrigem: agenciaOrigem,
                                     contaOrigem: contaOrigem,
@@ -157,40 +163,41 @@ export = (app: Router) =>{
                                     if (error)
                                         return response.status(500).send("Erro ao salvar transação: " + error);
         
-                                    console.log(transferencia);
                                     return response.render("../views/pages/usuario", {usuarioLogado:usuarioLogado})
                                 });
                             }) 
-                        }
-    
-                            
-            
-                    })
-                    
-                })
-                 
-               
-        
-            }
-              
+                        }            
+                    })                   
+                })        
+            }              
         })       
     })
 
-
-    app.post<reqRes>('/extratoTransferencias', function (request, response) {
+    app.post<reqRes>('/extratoTransferencias/:id', function (request, response) {
         let agenciaLogado = request.body.agencia;
         let contaLogado = request.body.conta;
-        console.log(contaLogado);
-        console.log(agenciaLogado);
-        let consulta = TransacaoModel.find({$or: [
-            {$and: [{ agenciaOrigem: agenciaLogado }, { contaOrigem: contaLogado }]},
-            {$and: [{ agenciaDestino: agenciaLogado }, { contaDestino: contaLogado }]}
-            ]},
-             (err:any, transferencia:any) => {
-            // console.log(transferencia);
-            if (err)
-                return response.status(500).send("Erro ao consultar transferências");
-            response.render("../views/pages/extratoTransferencias", {transferencias: transferencia}); 
+        let usuarioLogado = request.body.id;
+
+
+        UserModel.findById(({ _id: usuarioLogado }), (err:any, usuarioLogado:any) =>{
+            if (err) {
+                return response.status(500).send("Erro ao encontrar cliente e as transferências associadas ao cliente.");
+            } else {
+                TransferenciaModel.find({$or: [
+                    {$and: [{ agenciaOrigem: agenciaLogado }, { contaOrigem: contaLogado }]},
+                    {$and: [{ agenciaDestino: agenciaLogado }, { contaDestino: contaLogado }]}
+                    ]} , (err:any, transferencias:any) => { 
+                        if (err) {
+                            return response.status(500).send("Erro ao consultar transferências");
+                        }
+                        let transferenciasEnviadas = transferencias.filter(transferencia => { if (transferencia.agenciaOrigem === agenciaLogado) return transferencia});
+                        let transferenciasRecebidas = transferencias.filter(transferencia => { if (transferencia.agenciaDestino === agenciaLogado) return transferencia});
+
+                                                                 
+                        return response.render("../views/pages/extratoTransferencias", {transferenciasEnviadas: transferenciasEnviadas, transferenciasRecebidas: transferenciasRecebidas, usuarioLogado:usuarioLogado});
+                    }                    
+                )
+            }         
         })
     })
 }

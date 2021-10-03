@@ -1,6 +1,6 @@
 import { Schema, model } from 'mongoose';
 
-interface Transacao {
+interface Transferencia {
     tipo: string,   
     // data: Date,
     agenciaOrigem: string,
@@ -12,7 +12,7 @@ interface Transacao {
     valor: number
 }
 
-const Transacao = new Schema<Transacao>({
+const Transferencia = new Schema<Transferencia>({
     tipo: {
         type: String,
         required: true
@@ -51,6 +51,6 @@ const Transacao = new Schema<Transacao>({
     }
 })
 
-export const TransacaoModel = model<Transacao>('Transacao', Transacao);
-export {Transacao};
+export const TransferenciaModel = model<Transferencia>('Transferencia', Transferencia);
+export {Transferencia};
 
