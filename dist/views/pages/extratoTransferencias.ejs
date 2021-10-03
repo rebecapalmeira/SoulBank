@@ -4,7 +4,7 @@
     <div class="row">
         <div class="col-12">
             <h2 class="display-4 mb-5 text-center">Olá, <%= usuarioLogado.nome %></h2>
-            <h2 class="text-center">Transferências</h2>
+            <h4 class="text-center mensagem p-4">Consulte aqui as TRANSFERÊNCIAS vinculadas à sua conta</h4>
         </div>        
 
         <div class="container-fluid p-5">
@@ -19,6 +19,7 @@
                                 <th class="text-center">Agencia Origem</th>
                                 <th class="text-center">Conta Origem</th>
                                 <th class="text-center">Quem Transferiu</th>                                                                                                                       
+                                <th class="text-center">Quem Recebeu</th>                                                                                                                       
                                 <th class="text-center">Valor</th>
                             </tr>
                         </thead>
@@ -45,21 +46,24 @@
                                         <%= transferencia.nomeOrigem %>
                                     </td>    
                                     <td class="text-center">
+                                        <%= transferencia.nomeDestino %>
+                                    </td>    
+                                    <td class="text-center">
                                         <%= transferencia.valor %>
                                     </td>   
                                 </tr>
                         <% }) %>
                         </tbody>
                         <tfoot>
-                            <tr>
+                            <tr class="text-center">
                                 <!-- <td colspan="4"><a href="/usuario"><button class="btn btn-dark">Página Principal</button></a></td> -->
-                                <td colspan="4"><a href="/usuario/<%= usuarioLogado._id %>"><button class="btn btn-dark">Voltar</button></a></td>
+                                <td colspan="6"><a href="/usuario/<%= usuarioLogado._id %>"><button class="btn btn-dark">Voltar</button></a></td>
                             </tr>
                         </tfoot>
                     </table>
                 </div>
 
-                <div>
+                <div class="bg-light p-3">
                     <h2 class="text-center">Transferências Enviadas</h2>
 
                     <table class="table table-hover table-striped table-light mt-5 mb-5">
@@ -68,6 +72,7 @@
                                 <th class="text-center">ID da Transação</th>
                                 <th class="text-center">Agencia Destino</th>
                                 <th class="text-center">Conta Destino</th>
+                                <th class="text-center">Quem Transferiu</th>
                                 <th class="text-center">Quem Recebeu</th>                                                                                                                       
                                 <th class="text-center">Valor</th>
                             </tr>
@@ -80,6 +85,7 @@
                                     </td>
                                 </tr>
                             <% } %>
+
                             <% transferenciasEnviadas.forEach(function(transferencia) { %>
                                 <tr>
                                     <td class="text-center">
@@ -92,8 +98,11 @@
                                         <%= transferencia.contaDestino %>
                                     </td>
                                     <td class="text-center">
+                                        <%= transferencia.nomeOrigem %>
+                                    </td>       
+                                    <td class="text-center">
                                         <%= transferencia.nomeDestino %>
-                                    </td>    
+                                    </td>       
                                     <td class="text-center">
                                         <%= transferencia.valor %>
                                     </td>   
@@ -101,16 +110,17 @@
                         <% }) %>
                         </tbody>
                         <tfoot>
-                            <tr>
-                                <td colspan="4"><a href="/"><button class="btn btn-dark">Home</button></a></td>
+                            <tr class="text-center">
+                                <td colspan="6"><a href="/"><button class="btn btn-dark">Home</button></a></td>
                             </tr>
                         </tfoot>
                     </table>
                 </div>
             </div>
-           
+          
         </div>                  
     </div>
+
 </main>
 
 <%- include("../partials/footer") %>
