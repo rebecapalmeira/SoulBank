@@ -50,7 +50,7 @@
                   
                                 <div class="form-group col-sm-5 flex-column d-flex">
                                   <label  for="senha">Senha<span class="text-danger"> *</span></label>
-                                  <input  class="form-control"type="password" id="senha" name="senha" placeholder="******" onblur="validaSenha()" required>
+                                  <input  class="form-control"type="password" id="senha" name="senha" placeholder="******" onblur="validaSenha()" title="A senha deve conter 5 digitos, contendo pelo menos 1 numero e  uma letra maiuscula" required>
                                 </div>
                   
                               </div>
@@ -91,6 +91,145 @@
           </div>
       </div>      
     </main> 
+    <script>
+      function validaNome() {
+  
+        let letras = /^[a-zA-Z\s]*$/;
+        let nome = document.getElementById("nome").value;
+        let campo = document.getElementById("nome");
+  
+        if (nome.match(letras) && nome != "") {
+          campo.style.border = "2px solid green";
+          count++;
+        }
+        else {
+          campo.style.border = "2px solid red";
+        }
+  
+      }
+  
+      function validaCpf() {
+  
+        let numeros = /([0-9]{2}[\.]?[0-9]{3}[\.]?[0-9]{3}[\/]?[0-9]{4}[-]?[0-9]{2})|([0-9]{3}[\.]?[0-9]{3}[\.]?[0-9]{3}[-]?[0-9]{2})/;
+        let cpf = document.getElementById("cpf").value;
+        let campo = document.getElementById("cpf");
+  
+        if (cpf.match(numeros) && cpf != "") {
+          campo.style.border = "2px solid green";
+          count++;
+        }
+        else {
+          campo.style.border = "2px solid red";
+        }
+  
+      }
+      function validaNumero() {
+  
+        let numeros = /^\(?[1-9]{2}\)? ?(?:[2-8]|9[1-9])[0-9]{3}\-?[0-9]{4}$/;
+        let contato = document.getElementById("contato").value;
+        let campo = document.getElementById("contato");
+  
+        if (contato.match(numeros) && contato != "") {
+          campo.style.border = "2px solid green";
+          count++;
+        }
+        else {
+          campo.style.border = "2px solid red";
+        }
+  
+      }
+  
+      function validaEmail() {
+  
+        let caracteres = /^[a-zA-Z0-9.!#$%&'+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)$/;
+        let email = document.getElementById("email").value;
+        let campo = document.getElementById("email");
+  
+        if (email.match(caracteres) && email != "") {
+          campo.style.border = "2px solid green";
+          count++;
+        }
+        else {
+          campo.style.border = "2px solid red";
+        }
+  
+      }
+  
+      function validaSenha() {
+        // A senha deve conter 5 digitos, contendo pelo menos 1 numero e  uma letra maiuscula
+        let caracteres = /^(?=.[A-Za-z])(?=.\d)[A-Za-z\d]{5,}$/;
+        let senha = document.getElementById("senha").value;
+        let campo = document.getElementById("senha");
+  
+        if (senha.match(caracteres) && senha != "") {
+          campo.style.border = "2px solid green";
+          count++;
+        }
+        else {
+          campo.style.border = "2px solid red";
+        }
+  
+      }
+  
+  
+      // function validaAgencia() {
+  
+      //   let agencia = document.getElementById("agencia").value;
+      //   let campo = document.getElementById("agencia");
+  
+      //   if (agencia.length == 6 && agencia != "") {
+      //     campo.style.border = "2px solid green";
+      //     count++;
+      //   }
+      //   else {
+      //     campo.style.border = "2px solid red";
+      //   }
+  
+      // }
+  
+  
+      function validaConta() {
+  
+        let conta = document.getElementById("conta").value;
+        let campo = document.getElementById("conta");
+  
+        if (conta.length == 9 && conta != "") {
+          campo.style.border = "2px solid green";
+          count++;
+        }
+        else {
+          campo.style.border = "2px solid red";
+        }
+  
+      }
+  
+      function validaSaldo() {
+  
+        let saldo = document.getElementById("saldo").value;
+        let campo = document.getElementById("saldo");
+  
+        if (saldo != "") {
+          campo.style.border = "2px solid green";
+          count++;
+        }
+        else {
+          campo.style.border = "2px solid red";
+        }
+  
+      }
+  
+      function validarcampos() {
+        var b = document.getElementById("botao");
+        if (count >= 8) {
+          b.setAttribute("type", "submit");
+  
+  
+        }
+      }
+  
+  
+  
+    </script>
          
                 
     <!-- <script src="indice.js"></script> -->
