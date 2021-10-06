@@ -17,7 +17,7 @@
                               <div class="row justify-content-between text-left">
                                 <div class="form-group col-sm-12 flex-column d-flex">
                                   <label for="nome">Nome<span class="text-danger"> *</span></label>
-                                  <input class="form-control" type="text" id="nome" name="nome" placeholder="Ex: Ana" onblur="validaNome()">
+                                  <input class="form-control" type="text" id="nome" name="nome" placeholder="Ex: Ana" onblur="validaNome()" required>
                                 </div>
                               
                   
@@ -26,12 +26,12 @@
                               <div class=" row justify-content-between text-left">
                                 <div class="form-group col-sm-6 flex-column d-flex">
                                   <label  for="cpf">CPF<span class="text-danger"> *</span></label>
-                                  <input class="form-control" type="text" id="cpf" name="cpf" placeholder="000.000.000-15" onblur="validaCpf()">
+                                  <input class="form-control" type="text" id="cpf" name="cpf" placeholder="000.000.000-15" onblur="validaCpf()" required>
                                 </div>
                     
                                 <div class="form-group col-sm-6 flex-column d-flex">
                                   <label  for="contato">Contato<span class="text-danger"> *</span></label>
-                                  <input class="form-control" type="tel" id="contato" name="contato" placeholder="Ex: (15) 99999-9999" onblur="validaNumero()">
+                                  <input class="form-control" type="tel" id="contato" name="contato" placeholder="Ex: (15) 99999-9999" onblur="validaNumero()" required>
                                 </div>
                     
                               </div>
@@ -44,13 +44,13 @@
                                       <div class="input-group-prepend">
                                           <span class="input-group-text" id="saldo">@</span>
                                       </div>
-                                      <input class="form-control" type="email" id="email" name="email" placeholder="usuario@email.com" onblur="validaEmail()">
+                                      <input class="form-control" type="email" id="email" name="email" placeholder="usuario@email.com" onblur="validaEmail()" required>
                                   </div>
                                 </div>
                   
                                 <div class="form-group col-sm-5 flex-column d-flex">
                                   <label  for="senha">Senha<span class="text-danger"> *</span></label>
-                                  <input  class="form-control"type="password" id="senha" name="senha" placeholder="******" onblur="validaSenha()">
+                                  <input  class="form-control"type="password" id="senha" name="senha" placeholder="******" onblur="validaSenha()" required>
                                 </div>
                   
                               </div>
@@ -59,12 +59,12 @@
                               <div class="row justify-content-between text-left">
                                 <div class="form-group col-sm-4 flex-column d-flex">
                                   <label  for="agencia">Agência<span class="text-danger"> *</span></label>
-                                  <input class="form-control" type="text" id="agencia" name="agencia" placeholder="0000-0" onblur="validaAgencia()">
+                                  <input class="form-control" type="text" id="agencia" name="agencia" placeholder="0000-0" onblur="validaAgencia()" required>
                                 </div>
                   
                                 <div class="form-group col-sm-4 flex-column d-flex">
                                   <label  for="conta">Conta<span class="text-danger"> *</span></label>
-                                  <input class="form-control" type="text" id="conta" name="conta" placeholder="Digite sua conta" onblur="validaConta()">
+                                  <input class="form-control" type="text" id="conta" name="conta" placeholder="Digite sua conta" onblur="validaConta()" required>
                                 </div>
 
                                 <div class="col-sm-4 flex-column d-flex">
@@ -73,7 +73,7 @@
                                       <div class="input-group-prepend">
                                           <span class="input-group-text" id="saldo">R$</span>
                                       </div>
-                                      <input type="text" class="form-control" name="saldo" id="saldo" placeholder="Ex: 415.00" onblur="validaSaldo()">
+                                      <input type="text" class="form-control" name="saldo" id="saldo" placeholder="Ex: 415.00" onblur="validaSaldo()" required>
                                   </div>
                                 </div>
                     

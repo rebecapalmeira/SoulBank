@@ -43,7 +43,7 @@ export = (app: Router) =>{
         usuario.save(function (error) {
             if (error)
                 return response.status(500).send("Erro ao cadastrar Cliente: " + error);
-            return response.render('../views/pages/login');
+            return response.render('../views/pages/login', {mensagem: null});
         });
     });
 
